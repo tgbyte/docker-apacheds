@@ -20,16 +20,10 @@ RUN set -x \
     && sha256sum -c /tmp/SHA256SUM \
     && rm /tmp/SHA256SUM \
     && chmod +x /usr/local/bin/dumb-init \
-    #&& wget -q -O /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb http://ftp.halifax.rwth-aachen.de/apache/directory/apacheds/dist/${APACHEDS_VERSION}/apacheds-${APACHEDS_VERSION}-amd64.deb \
-    #&& wget -q -O /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb.asc https://archive.apache.org/dist/directory/apacheds/dist/${APACHEDS_VERSION}/apacheds-${APACHEDS_VERSION}-amd64.deb.asc \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --import /tmp/KEYS \
-    #&& gpg --batch --verify /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb.asc /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb \
     && dpkg -i /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb \
     && ln -s /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds /usr/local/bin/ \
     && mv /var/lib/apacheds-${APACHEDS_VERSION} /var/lib/apacheds \
     && sed -ie 's/^INSTANCES_DIRECTORY=.*/INSTANCES_DIRECTORY="\/var\/lib\/apacheds"/g' /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds \
-    #&& rm -r "$GNUPGHOME" /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb* \
     && apt-get purge -y --auto-remove wget
 
 COPY ldif/ /ldif/
