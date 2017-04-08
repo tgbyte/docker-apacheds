@@ -21,7 +21,10 @@ node {
     }
 
     stage('Build apacheds Docker image') {
-      def image = docker.build('tgbyte/apacheds')
+      docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
+        def image = docker.build('tgbyte/apacheds')
+        image.push()
+      }
     }
   }
 }
