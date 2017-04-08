@@ -17,5 +17,9 @@ node {
         sh 'cd directory-server && mvn -P debian -B clean install'
       }
     }
+
+    stage('Build apacheds Docker image') {
+      def image = docker.build('tgbyte/apacheds')
+    }
   }
 }
