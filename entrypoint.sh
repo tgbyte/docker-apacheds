@@ -1,5 +1,13 @@
 #!/bin/bash
 
+target=$1
+if find /var/lib/apacheds -mindepth 1 -print -quit | grep -q .; then
+  echo "/var/lib/apacheds already populated, skipping initialization"
+else
+  echo "/var/lib/apacheds empty, performing initialization"
+  cp -a /var/lib/apacheds.tmpl/* /var/lib/apacheds/
+fi
+
 /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
 while ! nc -z localhost 10389; do
   echo "Waiting for ApacheDS to come online..."

@@ -23,7 +23,8 @@ RUN set -x \
     && ln -s /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds /usr/local/bin/ \
     && mv /var/lib/apacheds-${APACHEDS_VERSION} /var/lib/apacheds \
     && sed -ie 's/^INSTANCES_DIRECTORY=.*/INSTANCES_DIRECTORY="\/var\/lib\/apacheds"/g' /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds \
-    && apt-get purge -y --auto-remove wget
+    && apt-get purge -y --auto-remove wget \
+    && cp -a /var/lib/apacheds /var/lib/apacheds.tmpl
 
 COPY ldif/ /ldif/
 COPY templates/ /templates/
