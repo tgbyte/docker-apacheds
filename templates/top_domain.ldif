@@ -1,0 +1,16 @@
+version: 1
+
+dn: dc=${APACHEDS_DOMAIN_NAME},dc=${APACHEDS_DOMAIN_SUFFIX}
+objectclass: top
+objectclass: domain
+dc: ${DOMAIN_NAME}
+
+dn: ou=groups,dc=${APACHEDS_DOMAIN_NAME},dc=${APACHEDS_DOMAIN_SUFFIX}
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+
+dn: ou=people,dc=${APACHEDS_DOMAIN_NAME},dc=${APACHEDS_DOMAIN_SUFFIX}
+objectClass: top
+objectClass: organizationalUnit
+ou: people
