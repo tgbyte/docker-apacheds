@@ -1,4 +1,7 @@
 node {
+  def directorySharedRevision = 'b015ff51a13018652c6e57d452650d1fb34d0bed'
+  def directoryServerRevision = '7c9ec394af8baafb822142421d843448acdba889'
+
   stage('Cleanup') {
     sh 'rm -rf directory-shared directory-server'
   }
@@ -13,14 +16,14 @@ node {
     stage('Build directory-shared') {
       docker.image('maven:3.3.9-jdk-8').inside(mavenArgs) {
         sh 'git clone https://github.com/apache/directory-shared.git'
-        sh 'cd directory-shared && mvn -B clean install'
+        sh 'cd directory-shared && git checkout ${directorySharedRevision} && mvn -B clean install'
       }
     }
 
     stage('Build directory-server') {
       docker.image('maven:3.3.9-jdk-8').inside(mavenArgs) {
         sh 'git clone https://github.com/apache/directory-server.git'
-        sh 'cd directory-server && mvn -P debian -B -T 1C clean install'
+        sh 'cd directory-server && git checkout ${directoryServerRevision && mvn -P debian -B -T 1C clean install'
       }
     }
 
