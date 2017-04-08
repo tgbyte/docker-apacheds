@@ -1,7 +1,8 @@
 #!/bin/bash
 
 /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
-while ! nc -z localhost 389; do
+while ! nc -z localhost 10389; do
+  echo "Waiting for ApacheDS to come online..."
   sleep 0.1
 done
 sleep 1
@@ -22,6 +23,7 @@ if [ -n "${APACHEDS_ACCESS_CONTROL_ENABLED}" ] && [ ! -e "/var/lib/apacheds/${AP
   /usr/local/bin/apacheds stop ${APACHEDS_INSTANCE_NAME}
   /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
   while ! nc -z localhost 10389; do
+    echo "Waiting for ApacheDS to come online..."
     sleep 0.1
   done
   sleep 1
@@ -38,6 +40,7 @@ if [ "${APACHEDS_DOMAIN_NAME}" != "example" ] || [ "${APACHEDS_DOMAIN_SUFFIX}" !
     /usr/local/bin/apacheds stop ${APACHEDS_INSTANCE_NAME}
     /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
     while ! nc -z localhost 10389; do
+      echo "Waiting for ApacheDS to come online..."
       sleep 0.1
     done
     sleep 1
