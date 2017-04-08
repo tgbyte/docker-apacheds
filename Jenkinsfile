@@ -3,7 +3,7 @@ node {
   checkout scm
 
   docker.withTool('Docker') {
-    docker.image('maven:3.3.9-jdk-8').inside {
+    docker.image('maven:3.3.9-jdk-8').inside('-e GIT_COMMITTER_NAME=Anonymous -e GIT_COMMITTER_EMAIL=me@privacy.net') {
       sh 'git clone https://github.com/apache/directory-shared.git'
       sh 'mvn -B clean install'
     }
