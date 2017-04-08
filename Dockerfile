@@ -10,7 +10,7 @@ ENV APACHEDS_ACCESS_CONTROL_ENABLED=1 \
     DUMBINIT_SHA256SUM=81231da1cd074fdc81af62789fead8641ef3f24b6b07366a1c34e5b059faf363 \
     DEBIAN_FRONTEND=noninteractive
 
-COPY directory-server/installers/target/installers/apacheds-2.0.0-M24-SNAPSHOT-i386.deb /tmp/
+COPY directory-server/installers/target/installers/apacheds-2.0.0-M24-SNAPSHOT-amd64.deb /tmp/
 
 RUN set -x \
     && apt-get update -qq && apt-get install -qq -y --no-install-recommends ca-certificates gettext-base ldap-utils netcat wget && rm -rf /var/lib/apt/lists/* \
