@@ -23,7 +23,7 @@ node {
     stage('Build directory-server') {
       docker.image('maven:3.3.9-jdk-8').inside(mavenArgs) {
         sh 'git clone https://github.com/apache/directory-server.git'
-        sh "cd directory-server && git checkout ${directoryServerRevision && mvn -P debian -B -T 1C clean install"
+        sh "cd directory-server && git checkout ${directoryServerRevision} && mvn -P debian -B -T 1C clean install"
       }
     }
 
