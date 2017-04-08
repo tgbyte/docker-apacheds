@@ -1,4 +1,8 @@
 node {
+  stage('Cleanup') {
+    sh 'rm -rf directory-shared directory-server'
+  }
+
   stage('Checkout') {
     checkout scm
   }
