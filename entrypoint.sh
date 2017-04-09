@@ -3,7 +3,7 @@
 function wait_for_apacheds {
   ATTEMPT=0
   while ! nc -z localhost 10389; do
-    ATTEMPT++
+    $(( ATTEMPT++ ))
     if [ $ATTEMPT -eq 20 ]; then
       echo "FATAL: ApacheDS failed to come online, exiting..."
       exit 1
