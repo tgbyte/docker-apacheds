@@ -16,14 +16,14 @@ node {
     stage('Build directory-shared') {
       docker.image('maven:3.2.5-jdk-8').inside(mavenArgs) {
         sh 'git clone https://github.com/apache/directory-shared.git'
-        sh "cd directory-shared && git checkout ${directorySharedRevision} && mvn -B clean install"
+        sh "cd directory-shared && git checkout ${directorySharedRevision} && mvn -B -DskipTests clean install"
       }
     }
 
     stage('Build directory-server') {
       docker.image('maven:3.2.5-jdk-8').inside(mavenArgs) {
         sh 'git clone https://github.com/apache/directory-server.git'
-        sh "cd directory-server && git checkout ${directoryServerRevision} && mvn -P debian -B -T 1C clean install"
+        sh "cd directory-server && git checkout ${directoryServerRevision} && mvn -P debian -B -T 1C -DskipTests clean install"
       }
     }
 
