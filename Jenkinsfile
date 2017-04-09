@@ -27,9 +27,14 @@ node {
       }
     }
 
+    def image
     stage('Build apacheds Docker image') {
+      def tag = env.BRANCH_NAME == 'master' ? 'latest' : env.BRANCH_NAME.replace('/', '-')
+      def image = docker.build("tgbyte/apacheds:${tag}")
+    }
+
+    stage('Push apacheds Docker image') {
       docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
-        def image = docker.build('tgbyte/apacheds')
         image.push()
       }
     }
