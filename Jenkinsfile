@@ -14,14 +14,14 @@ node {
     def mavenArgs = "-e MAVEN_OPTS=-Duser.home=${workspace} -e GIT_COMMITTER_NAME=Anonymous -e GIT_COMMITTER_EMAIL=me@privacy.net"
 
     stage('Build directory-shared') {
-      docker.image('maven:3.3.9-jdk-8').inside(mavenArgs) {
+      docker.image('maven:3.2.5-jdk-8').inside(mavenArgs) {
         sh 'git clone https://github.com/apache/directory-shared.git'
         sh "cd directory-shared && git checkout ${directorySharedRevision} && mvn -B clean install"
       }
     }
 
     stage('Build directory-server') {
-      docker.image('maven:3.3.9-jdk-8').inside(mavenArgs) {
+      docker.image('maven:3.2.5-jdk-8').inside(mavenArgs) {
         sh 'git clone https://github.com/apache/directory-server.git'
         sh "cd directory-server && git checkout ${directoryServerRevision} && mvn -P debian -B -T 1C clean install"
       }
