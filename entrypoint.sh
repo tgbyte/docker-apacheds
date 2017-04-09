@@ -1,5 +1,19 @@
 #!/bin/bash
 
+function wait_for_apacheds {
+  ATTEMPT=0
+  while ! nc -z localhost 10389; do
+    ATTEMPT++
+    if [ $ATTEMPT -eq 20 ]; then
+      echo "FATAL: ApacheDS failed to come online, exiting..."
+      exit 1
+    fi
+    echo "Waiting for ApacheDS to come online..."
+    sleep 0.5
+  done
+  sleep 1
+}
+
 target=$1
 if find /var/lib/apacheds -mindepth 1 -print -quit | grep -q .; then
   echo "/var/lib/apacheds already populated, skipping initialization"
@@ -9,11 +23,7 @@ else
 fi
 
 /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
-while ! nc -z localhost 10389; do
-  echo "Waiting for ApacheDS to come online..."
-  sleep 0.1
-done
-sleep 1
+wait_for_apacheds
 
 if [ "${APACHEDS_ADMIN_PASSWORD}" != "secret" ] && [ ! -e "/var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.password-set" ]; then
   echo "*** Setting admin password..."
@@ -30,11 +40,7 @@ if [ -n "${APACHEDS_ACCESS_CONTROL_ENABLED}" ] && [ ! -e "/var/lib/apacheds/${AP
   touch /var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.access
   /usr/local/bin/apacheds stop ${APACHEDS_INSTANCE_NAME}
   /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
-  while ! nc -z localhost 10389; do
-    echo "Waiting for ApacheDS to come online..."
-    sleep 0.1
-  done
-  sleep 1
+  wait_for_apacheds
 fi
 
 if [ "${APACHEDS_DOMAIN_NAME}" != "example" ] || [ "${APACHEDS_DOMAIN_SUFFIX}" != "com" ]; then
@@ -47,11 +53,7 @@ if [ "${APACHEDS_DOMAIN_NAME}" != "example" ] || [ "${APACHEDS_DOMAIN_SUFFIX}" !
     ldapdelete "dc=example,dc=com" -p 10389 -h localhost -D "uid=admin,ou=system" -r -w ${APACHEDS_ADMIN_PASSWORD}
     /usr/local/bin/apacheds stop ${APACHEDS_INSTANCE_NAME}
     /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
-    while ! nc -z localhost 10389; do
-      echo "Waiting for ApacheDS to come online..."
-      sleep 0.1
-    done
-    sleep 1
+    wait_for_apacheds
     envsubst < "/templates/top_domain.ldif" > "/tmp/top_domain.ldif"
     ldapmodify -c -a -f /tmp/top_domain.ldif -h localhost -p 10389 -D "uid=admin,ou=system" -w ${APACHEDS_ADMIN_PASSWORD}
     touch /var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.domain-created
