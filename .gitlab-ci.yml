@@ -19,7 +19,9 @@ apacheds-image:
   services:
     - name: docker:dind
       alias: docker
-  script: build/image.sh
+  script:
+    - ls -al directory-server/installers/target/installers/
+    - build/image.sh
   cache:
     key: apacheds-$CI_BUILD_REF
     policy: pull
