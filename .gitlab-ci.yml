@@ -18,8 +18,6 @@ image:apacheds:
   services:
     - name: docker:dind
       alias: docker
-  script:
-    - ls -al directory-server/installers/target/installers/
-    - build/image.sh
+  script: build/image.sh
   dependencies:
     - build:apacheds
