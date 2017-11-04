@@ -14,7 +14,7 @@ COPY directory-server/installers/target/installers/apacheds-${APACHEDS_VERSION}-
 
 RUN set -x \
     && apt-get update -qq \
-    && apt-get install -qq -y --no-install-recommends ca-certificates gettext-base ldap-utils netcat procps vim wget && rm -rf /var/lib/apt/lists/* \
+    && apt-get install -qq -y --no-install-recommends ca-certificates gettext-base ldap-utils netcat procps wget && rm -rf /var/lib/apt/lists/* \
     && wget -q -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v${DUMBINIT_VERSION}/dumb-init_${DUMBINIT_VERSION}_amd64 \
     && echo "${DUMBINIT_SHA256SUM}  /usr/local/bin/dumb-init" > /tmp/SHA256SUM \
     && sha256sum -c /tmp/SHA256SUM \
