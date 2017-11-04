@@ -12,7 +12,7 @@ apacheds-build:
     paths:
       - directory-server/installers/target/installers/
   variables:
-    DIRECTORY_SERVER_REVISION: 4077a74e6ee878019ab1245fd80718781a37ef40
+    DIRECTORY_SERVER_REVISION: 2.0.0-M24
 
 apacheds-image:
   stage: image
