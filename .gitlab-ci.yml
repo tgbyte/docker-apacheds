@@ -2,19 +2,17 @@ stages:
   - build
   - image
 
-apacheds-build:
+build:apacheds:
   stage: build
   image: maven:3.2.5-jdk-8
   script: build/build.sh
-  cache:
-    key: apacheds-$CI_BUILD_REF
-    policy: push
+  artifacts:
     paths:
       - directory-server/installers/target/installers/
   variables:
     DIRECTORY_SERVER_REVISION: 2.0.0-M24
 
-apacheds-image:
+image:apacheds:
   stage: image
   services:
     - name: docker:dind
@@ -22,8 +20,5 @@ apacheds-image:
   script:
     - ls -al directory-server/installers/target/installers/
     - build/image.sh
-  cache:
-    key: apacheds-$CI_BUILD_REF
-    policy: pull
-    paths:
-      - directory-server/installers/target/installers/
+  dependencies:
+    - build:apacheds
