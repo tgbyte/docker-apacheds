@@ -11,5 +11,12 @@ master)
   ;;
 esac
 
-docker build -t ${image_name}:${image_tag} -f "${dockerfile}" --no-cache --pull .
+docker build \
+  -t ${image_name}:${image_tag} \
+  -f "${dockerfile}" \
+  --build-arg APACHEDS_VERSION=${APACHEDS_VERSION} \
+  --no-cache \
+  --pull \
+  .
+
 docker push ${image_name}:${image_tag}

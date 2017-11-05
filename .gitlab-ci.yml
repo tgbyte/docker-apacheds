@@ -2,6 +2,10 @@ stages:
   - build
   - image
 
+variables:
+  APACHEDS_VERSION: 2.0.0-M24
+  DIRECTORY_SERVER_GIT_REVISION: 2.0.0-M24
+
 build:apacheds:
   stage: build
   image: maven:3.2.5-jdk-8
@@ -10,8 +14,6 @@ build:apacheds:
     paths:
       - directory-server/installers/target/installers/*-amd64.deb
     expire_in: 1 week
-  variables:
-    DIRECTORY_SERVER_REVISION: 2.0.0-M24
 
 image:apacheds:
   stage: image
