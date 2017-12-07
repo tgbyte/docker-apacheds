@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
 
 export GIT_COMMITTER_NAME=Anonymous
 export GIT_COMMITTER_EMAIL=me@privacy.net

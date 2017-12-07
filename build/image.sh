@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
 
 image_name="${1:-tgbyte/apacheds}"
 dockerfile="${2:-Dockerfile}"
