@@ -9,6 +9,7 @@ variables:
 build:apacheds:
   stage: build
   image: maven:3.2.5-jdk-8
+  retry: 2
   script: build/build.sh
   artifacts:
     paths:
