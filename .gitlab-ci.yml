@@ -3,8 +3,8 @@ stages:
   - image
 
 variables:
-  APACHEDS_VERSION: 2.0.0-M24
-  DIRECTORY_SERVER_GIT_REVISION: 2.0.0-M24
+  APACHEDS_VERSION: 2.0.0-M25
+  DIRECTORY_SERVER_GIT_REVISION: 2.0.0-M25
 
 build:apacheds:
   stage: build
