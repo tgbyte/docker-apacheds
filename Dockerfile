@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM adoptopenjdk/openjdk11:slim
 
 ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0-M24}
 
@@ -26,6 +26,7 @@ RUN set -x \
     && ln -s /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds /usr/local/bin/ \
     && mv /var/lib/apacheds-${APACHEDS_VERSION} /var/lib/apacheds \
     && sed -ie 's/^INSTANCES_DIRECTORY=.*/INSTANCES_DIRECTORY="\/var\/lib\/apacheds"/g' /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds \
+    && sed -ie 's/^# wrapper.java.command=.*/wrapper.java.command=\/opt\/java\/openjdk\/bin\/java/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
     && apt-get purge -y --auto-remove wget \
     && cp -a /var/lib/apacheds /var/lib/apacheds.tmpl
 
