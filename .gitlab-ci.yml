@@ -18,9 +18,6 @@ build:apacheds:
 
 image:apacheds:
   stage: image
-  services:
-    - name: docker:dind
-      alias: docker
   script: build/image.sh
   dependencies:
     - build:apacheds
