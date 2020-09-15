@@ -23,7 +23,7 @@ else
   cp -a /var/lib/apacheds.tmpl/* /var/lib/apacheds/
 fi
 
-strace /usr/local/bin/apacheds console ${APACHEDS_INSTANCE_NAME}
+strace -f /usr/local/bin/apacheds console ${APACHEDS_INSTANCE_NAME}
 wait_for_apacheds
 
 if [ "${APACHEDS_ADMIN_PASSWORD}" != "secret" ] && [ ! -e "/var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.password-set" ]; then
