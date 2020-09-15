@@ -7,7 +7,6 @@ function wait_for_apacheds {
     if [ $ATTEMPT -eq 20 ]; then
       echo "FATAL: ApacheDS failed to come online, exiting..."
       ps auxw
-      ls -al /opt/java/openjdk/bin/java
       exit 1
     fi
     echo "Waiting for ApacheDS to come online..."
