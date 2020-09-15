@@ -23,7 +23,7 @@ else
   cp -a /var/lib/apacheds.tmpl/* /var/lib/apacheds/
 fi
 
-echo "#include.required /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf" > /var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/conf/wrapper-instance.conf
+echo "#include /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf" > /var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/conf/wrapper-instance.conf
 
 /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
 wait_for_apacheds
