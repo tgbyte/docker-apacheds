@@ -8,5 +8,3 @@ variables:
 image:apacheds:
   stage: image
   script: build/image.sh
-  dependencies:
-    - build:apacheds
