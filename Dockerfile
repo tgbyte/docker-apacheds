@@ -39,7 +39,7 @@ RUN set -x \
     && ln -s /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds /usr/local/bin/ \
     && mv /var/lib/apacheds-${APACHEDS_VERSION} /var/lib/apacheds \
     && sed -ie 's/^INSTANCES_DIRECTORY=.*/INSTANCES_DIRECTORY="\/var\/lib\/apacheds"/g' /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds \
-    # && sed -ie 's/^# wrapper.java.command=.*/wrapper.java.command=\/opt\/java\/openjdk\/bin\/java/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
+    && sed -ie 's/^# wrapper.java.command=.*/wrapper.java.command=\/opt\/java\/openjdk\/bin\/java/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
     && sed -ie 's/^wrapper.console.loglevel=.*/wrapper.console.loglevel=DEBUG/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
     && sed -ie 's/^wrapper.console.loglevel=.*/wrapper.console.loglevel=DEBUG/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
     && apt-get purge -y --auto-remove gnupg wget \
