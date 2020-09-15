@@ -1,6 +1,6 @@
 FROM adoptopenjdk/openjdk11:slim
 
-ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0-M24}
+ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0.AM25}
 
 ENV APACHEDS_ACCESS_CONTROL_ENABLED=1 \
     APACHEDS_ADMIN_PASSWORD=secret \
@@ -8,26 +8,39 @@ ENV APACHEDS_ACCESS_CONTROL_ENABLED=1 \
     APACHEDS_DOMAIN_SUFFIX=com \
     APACHEDS_INSTANCE_NAME=default \
     APACHEDS_VERSION=${APACHEDS_VERSION} \
-    DUMBINIT_VERSION=1.2.0 \
-    DUMBINIT_SHA256SUM=81231da1cd074fdc81af62789fead8641ef3f24b6b07366a1c34e5b059faf363 \
     DEBIAN_FRONTEND=noninteractive
 
-COPY directory-server/installers/target/installers/apacheds-${APACHEDS_VERSION}-amd64.deb /tmp/
+ADD KEYS /tmp/KEYS
 
 RUN set -x \
     && apt-get update -qq \
-    && apt-get install -qq -y --no-install-recommends ca-certificates gettext-base ldap-utils netcat procps wget && rm -rf /var/lib/apt/lists/* \
-    && wget -q -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v${DUMBINIT_VERSION}/dumb-init_${DUMBINIT_VERSION}_amd64 \
-    && echo "${DUMBINIT_SHA256SUM}  /usr/local/bin/dumb-init" > /tmp/SHA256SUM \
-    && sha256sum -c /tmp/SHA256SUM \
-    && rm /tmp/SHA256SUM \
-    && chmod +x /usr/local/bin/dumb-init \
-    && dpkg -i /tmp/apacheds-${APACHEDS_VERSION}-amd64.deb \
+    && apt-get install -qq -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      dumb-init \
+      gettext-base \
+      gnupg \
+      ldap-utils \
+      netcat \
+      procps \
+      wget \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -sL -o /tmp/apacheds.deb https://archive.apache.org/dist/directory/apacheds/dist/${APACHEDS_VERSION}/apacheds-${APACHEDS_VERSION}-amd64.deb \
+    && curl -sL -o /tmp/apacheds.deb.asc https://archive.apache.org/dist/directory/apacheds/dist/${APACHEDS_VERSION}/apacheds-${APACHEDS_VERSION}-amd64.deb.asc \
+    && gpg --no-tty --import /tmp/KEYS \
+    && cat /tmp/apacheds.deb.asc \
+    && gpg --no-tty --verify --trust-model always /tmp/apacheds.deb.asc /tmp/apacheds.deb \
+    && dpkg -i /tmp/apacheds.deb \
+    && rm \
+      /tmp/apacheds.deb \
+      /tmp/apacheds.deb.asc \
+      /tmp/KEYS \
     && ln -s /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds /usr/local/bin/ \
     && mv /var/lib/apacheds-${APACHEDS_VERSION} /var/lib/apacheds \
     && sed -ie 's/^INSTANCES_DIRECTORY=.*/INSTANCES_DIRECTORY="\/var\/lib\/apacheds"/g' /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds \
     && sed -ie 's/^# wrapper.java.command=.*/wrapper.java.command=\/opt\/java\/openjdk\/bin\/java/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
     && apt-get purge -y --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/* \
     && cp -a /var/lib/apacheds /var/lib/apacheds.tmpl
 
 COPY ldif/ /ldif/
@@ -37,5 +50,5 @@ COPY entrypoint.sh /usr/local/bin/
 EXPOSE 10389 10636 60088 60464 8080 8443
 VOLUME ["/var/lib/apacheds"]
 
-ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["/usr/local/bin/entrypoint.sh"]

@@ -3,18 +3,7 @@ stages:
   - image
 
 variables:
-  APACHEDS_VERSION: 2.0.0-AM25
-  DIRECTORY_SERVER_GIT_REVISION: 2.0.0-AM25
-
-build:apacheds:
-  stage: build
-  image: maven:3.6-jdk-11
-  retry: 2
-  script: build/build.sh
-  artifacts:
-    paths:
-      - directory-server/installers/target/installers/*-amd64.deb
-    expire_in: 1 week
+  APACHEDS_VERSION: 2.0.0.AM25
 
 image:apacheds:
   stage: image
