@@ -3,7 +3,7 @@ stages:
   - image
 
 variables:
-  APACHEDS_VERSION: 2.0.0.AM25
+  APACHEDS_VERSION: 2.0.0.AM26
 
 image:apacheds:
   stage: image
