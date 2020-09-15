@@ -40,7 +40,7 @@ RUN set -x \
     && sed -ie 's/^INSTANCES_DIRECTORY=.*/INSTANCES_DIRECTORY="\/var\/lib\/apacheds"/g' /opt/apacheds-${APACHEDS_VERSION}/bin/apacheds \
     && sed -ie 's/^# wrapper.java.command=.*/wrapper.java.command=\/opt\/java\/openjdk\/bin\/java/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
     && sed -ie 's/^wrapper.console.loglevel=.*/wrapper.console.loglevel=DEBUG/g' /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf \
-    && apt-get purge -y --auto-remove wget \
+    && apt-get purge -y --auto-remove gnupg wget \
     && rm -rf /var/lib/apt/lists/* \
     && cp -a /var/lib/apacheds /var/lib/apacheds.tmpl
 
@@ -48,7 +48,7 @@ COPY ldif/ /ldif/
 COPY templates/ /templates/
 COPY entrypoint.sh /usr/local/bin/
 
-EXPOSE 10389 10636 60088 60464 8080 8443
+EXPOSE 10389 10636
 VOLUME ["/var/lib/apacheds"]
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
