@@ -24,7 +24,9 @@ else
   cp -a /var/lib/apacheds.tmpl/* /var/lib/apacheds/
 fi
 
-strace -f /usr/local/bin/apacheds console ${APACHEDS_INSTANCE_NAME}
+echo "cat > #include /opt/apacheds-${APACHEDS_VERSION}/conf/wrapper.conf" > /var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/conf/wrapper-instance.conf
+
+/usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
 wait_for_apacheds
 
 if [ "${APACHEDS_ADMIN_PASSWORD}" != "secret" ] && [ ! -e "/var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.password-set" ]; then
