@@ -6,6 +6,7 @@ function wait_for_apacheds {
     ((ATTEMPT++))
     if [ $ATTEMPT -eq 20 ]; then
       echo "FATAL: ApacheDS failed to come online, exiting..."
+      ps auxw
       exit 1
     fi
     echo "Waiting for ApacheDS to come online..."
