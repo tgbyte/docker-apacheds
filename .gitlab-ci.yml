@@ -1,10 +1,6 @@
-stages:
-  - build
-  - image
+include:
+  - project: 'docker/builder'
+    file: '/templates/.gitlab-ci.yml'
 
 variables:
-  APACHEDS_VERSION: 2.0.0.AM26
-
-image:apacheds:
-  stage: image
-  script: build/image.sh
+  ARG_APACHEDS_VERSION: 2.0.0.AM26
