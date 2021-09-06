@@ -4,3 +4,4 @@ include:
 
 variables:
   ARG_APACHEDS_VERSION: 2.0.0.AM26
+  TRIVY_VULN_TYPE: os
