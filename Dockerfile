@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:slim
+FROM eclipse-temurin:11
 
 ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0.AM26}
 
