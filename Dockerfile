@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11
+FROM azul/zulu-openjdk:11
 
 ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0.AM26}
 
