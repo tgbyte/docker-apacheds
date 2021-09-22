@@ -3,5 +3,5 @@ include:
     file: '/templates/.gitlab-ci.yml'
 
 variables:
-  ARG_APACHEDS_VERSION: 2.0.0.AM26
+  BUILD_IMAGE_SCRIPT: .gitlab-ci/build-image.sh
   TRIVY_VULN_TYPE: os
