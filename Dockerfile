@@ -14,6 +14,7 @@ ADD KEYS /tmp/KEYS
 
 RUN set -x \
     && apt-get update -qq \
+    && apt-get upgrade -q -y \
     && apt-get install -qq -y --no-install-recommends \
       ca-certificates \
       curl \
