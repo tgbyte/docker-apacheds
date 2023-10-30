@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk:11
+FROM azul/zulu-openjdk:21
 
 ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0.AM26}
 
