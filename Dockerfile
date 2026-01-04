@@ -1,6 +1,6 @@
-FROM azul/zulu-openjdk:11
+FROM eclipse-temurin:21
 
-ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0.AM26}
+ARG APACHEDS_VERSION=${APACHEDS_VERSION:-2.0.0.AM27}
 
 ENV APACHEDS_ACCESS_CONTROL_ENABLED=1 \
     APACHEDS_ADMIN_PASSWORD=secret \
@@ -22,7 +22,7 @@ RUN set -x \
       gettext-base \
       gnupg \
       ldap-utils \
-      netcat \
+      netcat-traditional \
       procps \
       wget \
     && rm -rf /var/lib/apt/lists/* \
@@ -42,7 +42,8 @@ RUN set -x \
     && sed -ie "s|^# wrapper.java.command=.*|wrapper.java.command=$(which java)|g" /opt/apacheds-*/conf/wrapper.conf \
     && apt-get purge -y --auto-remove gnupg wget \
     && rm -rf /var/lib/apt/lists/* \
-    && cp -a /var/lib/apacheds /var/lib/apacheds.tmpl
+    && cp -a /var/lib/apacheds /var/lib/apacheds.tmpl \
+    && rm -rf /var/lib/apacheds/*
 
 COPY ldif/ /ldif/
 COPY templates/ /templates/
