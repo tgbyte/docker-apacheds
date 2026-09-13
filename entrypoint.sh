@@ -32,8 +32,31 @@ REAL_APACHEDS_VERSION=$(basename /opt/apacheds-* | sed 's/^apacheds-//')
 
 echo "#include /opt/apacheds-${REAL_APACHEDS_VERSION}/conf/wrapper.conf" > /var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/conf/wrapper-instance.conf
 
-/usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
-wait_for_apacheds
+# Decide up front whether any of the bootstrap blocks below has work to do.
+# Each of them is already guarded by its own marker file, so on a populated
+# volume every one is a no-op -- but the server still had to be started for
+# them and stopped again before the real run, and that throwaway cycle
+# dominated the startup time. When there is nothing to bootstrap, skip it and
+# hand straight over to `apacheds console`.
+#
+# The conditions here must stay identical to the ones on the blocks; a
+# mismatch that under-reports would leave a block wanting a server that is
+# not running. Over-reporting is harmless: it only costs the old cycle.
+INSTANCE_DIR="/var/lib/apacheds/${APACHEDS_INSTANCE_NAME}"
+needs_bootstrap=""
+[ "${APACHEDS_ADMIN_PASSWORD}" != "secret" ] && [ ! -e "${INSTANCE_DIR}/.password-set" ] && needs_bootstrap=yes
+[ -n "${APACHEDS_ACCESS_CONTROL_ENABLED}" ] && [ ! -e "${INSTANCE_DIR}/.access" ] && needs_bootstrap=yes
+{ [ "${APACHEDS_DOMAIN_NAME}" != "example" ] || [ "${APACHEDS_DOMAIN_SUFFIX}" != "com" ]; } && [ ! -e "${INSTANCE_DIR}/.domain-created" ] && needs_bootstrap=yes
+[ -n "${APACHEDS_ACCESS_CONTROL_ENABLED}" ] && [ ! -e "${INSTANCE_DIR}/.access_config" ] && needs_bootstrap=yes
+[ -d /ldif.d/ ] && [ ! -e "${INSTANCE_DIR}/.ldif.d" ] && needs_bootstrap=yes
+
+if [ -n "${needs_bootstrap}" ]; then
+  echo "Bootstrap work pending, starting ApacheDS for it"
+  /usr/local/bin/apacheds start ${APACHEDS_INSTANCE_NAME}
+  wait_for_apacheds
+else
+  echo "Nothing to bootstrap, skipping the setup start/stop cycle"
+fi
 
 if [ "${APACHEDS_ADMIN_PASSWORD}" != "secret" ] && [ ! -e "/var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.password-set" ]; then
   echo "*** Setting admin password..."
@@ -86,5 +109,7 @@ if [ -d /ldif.d/ ] && [ ! -e "/var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.ldif.
   touch /var/lib/apacheds/${APACHEDS_INSTANCE_NAME}/.ldif.d
 fi
 
-/usr/local/bin/apacheds stop ${APACHEDS_INSTANCE_NAME}
+if [ -n "${needs_bootstrap}" ]; then
+  /usr/local/bin/apacheds stop ${APACHEDS_INSTANCE_NAME}
+fi
 exec /usr/local/bin/apacheds console ${APACHEDS_INSTANCE_NAME}
